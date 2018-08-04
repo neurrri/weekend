@@ -1,38 +1,18 @@
 //
-//  WordTableViewController.swift
+//  UnilListViewController.swift
 //  amgi
 //
-//  Created by CAUAD09 on 2018. 8. 3..
+//  Created by CAUAD09 on 2018. 8. 4..
 //  Copyright © 2018년 NEURRRI. All rights reserved.
 //
 
 import UIKit
 
-class WordsCell: UITableViewCell {
+class UnilListViewController: UITableViewController {
+    
+    var unitList:[OneUnit] = []
 
-    
-    @IBOutlet weak var explanationText: UITextView!
-    @IBOutlet weak var keywordLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
-}
-
-class WordTableViewController: UITableViewController {
-    
-    var selectedUnit:OneUnit?
-    
-    @IBOutlet weak var selectedUnitName: UITextField!
-    @IBOutlet weak var newKeyword: UITextField!
-    @IBOutlet weak var newExplanation: UITextView!
+    @IBOutlet weak var newUnitName: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,8 +22,6 @@ class WordTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
-        selectedUnitName.text = selectedUnit?.unitName
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -59,41 +37,38 @@ class WordTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        guard let rowCount = selectedUnit?.allWords.count else {
-            return 0
-        }
+        // #warning Incomplete implementation, return the number of rows
+        var rowCount = unitList.count
         return rowCount
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "keywordSet", for: indexPath) as! WordsCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "unitCells", for: indexPath)
         
-        guard let wordSet = selectedUnit?.allWords[indexPath.row] else {
-            return cell
-        }
-        
-        cell.keywordLabel?.text = wordSet.keyword
-        cell.explanationText?.text = wordSet.explanation
-        
+        let unit = unitList[indexPath.row]
+        cell.textLabel?.text = unit.unitName
+        cell.detailTextLabel?.text = "\(unit.allWords.count + unit.allSentences.count)"
+
         return cell
     }
     
-    @IBAction func saveNewWordSetButton(_ sender: Any) {
-        if let newKeyword = self.newKeyword.text, let newExplanation = self.newExplanation.text {
-            if newKeyword == "" || newExplanation == "" {
-                //빈 텍스트일 때
+    @IBAction func addNewUnit(_ sender: Any) {
+        if let newUnit = newUnitName.text {
+            if newUnit == "" {
+                return
             } else {
-                //wordData.keywordList.append(newKeyword)
-                selectedUnit?.allWords.insert(Words(keyword: newKeyword, explanation: newExplanation), at: 0)
+                unitList.append(OneUnit(unitName: newUnit))
             }
         }
-        self.newKeyword.text = nil
-        self.newExplanation.text = nil
+        self.newUnitName.text = nil
         self.tableView.reloadData()
     }
     
-
+    override func viewWillAppear(_ animated: Bool) {
+        self.tableView.reloadData()
+    }
+    
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -129,14 +104,19 @@ class WordTableViewController: UITableViewController {
     }
     */
 
-  /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        let nextViewcontroller = segue.destination as? SegmentViewController
+        let selectedIndexPath = self.tableView.indexPathForSelectedRow
+        if let indexPath = selectedIndexPath {
+            nextViewcontroller?.selectedUnit = unitList[indexPath.row]
+        }
     }
-    */
+    
 
 }

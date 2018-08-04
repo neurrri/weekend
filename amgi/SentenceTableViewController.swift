@@ -25,12 +25,16 @@ class SentencesCell: UITableViewCell {
 }
 
 class SentenceTableViewController: UITableViewController {
+    
+    var selectedUnit:OneUnit?
 
     @IBOutlet weak var newSentence: UITextView!
+    @IBOutlet weak var selectedUnitName: UITextField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        selectedUnitName.text = selectedUnit?.unitName
     }
 
     override func didReceiveMemoryWarning() {
@@ -46,8 +50,9 @@ class SentenceTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        var rowCount = sentenceData.allSentences.count
+        guard let rowCount = selectedUnit?.allSentences.count else {
+            return 0
+        }
         return rowCount
     }
 
@@ -55,9 +60,10 @@ class SentenceTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SentenceSet", for: indexPath) as! SentencesCell
 
-        let sentenceSet = sentenceData.allSentences[indexPath.row]
-        
-        cell.sentenceText?.text = sentenceSet
+        guard let SentenceSet = selectedUnit?.allSentences[indexPath.row] else {
+            return cell
+        }
+        cell.sentenceText?.text = SentenceSet
         
         return cell
     }
@@ -67,7 +73,7 @@ class SentenceTableViewController: UITableViewController {
             if newSentence == "" {
                 return
             } else {
-                sentenceData.allSentences.insert(newSentence, at: 0)
+                selectedUnit?.allSentences.insert(newSentence, at: 0)
             }
         }
         self.newSentence.text = nil

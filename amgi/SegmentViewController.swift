@@ -9,6 +9,8 @@
 import UIKit
 
 class SegmentViewController: UIViewController {
+    
+    var selectedUnit:OneUnit?
    
     @IBOutlet weak var sentencesView: UIView!
     @IBOutlet weak var wordsView: UIView!
@@ -35,14 +37,24 @@ class SegmentViewController: UIViewController {
     }
     
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
+        if segue.identifier == "toWordsView" {
+            let nextController = segue.destination as? WordTableViewController
+            //let selectedIndexPath = self.selectedUnit
+            //if let indexPath = selectedIndexPath {
+            nextController?.selectedUnit = self.selectedUnit
+            //}
+        } else if segue.identifier == "toSentencesView" {
+            let nextController = segue.destination as? SentenceTableViewController
+            nextController?.selectedUnit = self.selectedUnit
+        }
     }
-    */
+    
 
 }

@@ -8,9 +8,22 @@
 
 import Foundation
 
-let wordData:WordData = WordData()
-let sentenceData:SentenceData = SentenceData()
+//let wordData:WordData = WordData()
+//let sentenceData:SentenceData = SentenceData()
 
+class OneUnit {
+    var unitName:String?
+    var allWords:[Words]
+    var allSentences:[String]
+    
+    init(unitName:String) {
+        self.unitName = unitName
+        self.allWords = []
+        self.allSentences = []
+    }
+}
+
+/*
 class WordData {
     var allWords:[Words]
     
@@ -18,7 +31,7 @@ class WordData {
         self.allWords = []
     }
 }
-
+*/
 
 class Words { //단어들
     var keyword:String
@@ -30,7 +43,7 @@ class Words { //단어들
     }
     
 }
-
+/*
 class SentenceData {
     var allSentences : [String]
     
@@ -38,4 +51,4 @@ class SentenceData {
         self.allSentences = []
     }
 }
-
+*/
